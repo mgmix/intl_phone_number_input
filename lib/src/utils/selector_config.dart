@@ -19,6 +19,18 @@ class SelectorConfig {
   /// [useEmoji], uses emoji flags instead of png assets
   final bool useEmoji;
 
+  /// [emojiStyle], set emoji text style
+  final TextStyle? emojiStyle;
+
+  /// [selectorTitleText]
+  final String? selectorTitleText;
+
+  /// [selectorTitleTextStyle]
+  final TextStyle? selectorTitleTextStyle;
+
+  // [countryTextStyle]
+  final TextStyle? countryTextStyle;
+
   /// [countryComparator], sort the country list according to the comparator.
   ///
   /// Sorting is disabled by default
@@ -41,5 +53,9 @@ class SelectorConfig {
     this.setSelectorButtonAsPrefixIcon = false,
     this.leadingPadding,
     this.trailingSpace = true,
+    this.emojiStyle,
+    this.selectorTitleText,
+    this.selectorTitleTextStyle,
+    this.countryTextStyle
   });
 }

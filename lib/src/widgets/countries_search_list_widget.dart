@@ -12,6 +12,10 @@ class CountrySearchListWidget extends StatefulWidget {
   final bool autoFocus;
   final bool? showFlags;
   final bool? useEmoji;
+  final TextStyle? emojiStyle;
+  final String? selectorTitleText;
+  final TextStyle? selectorTitleTextStyle;
+  final TextStyle? countryTextStyle;
 
   CountrySearchListWidget(
     this.countries,
@@ -21,11 +25,14 @@ class CountrySearchListWidget extends StatefulWidget {
     this.showFlags,
     this.useEmoji,
     this.autoFocus = false,
+    this.emojiStyle,
+    this.selectorTitleText,
+    this.selectorTitleTextStyle,
+    this.countryTextStyle
   });
 
   @override
-  _CountrySearchListWidgetState createState() =>
-      _CountrySearchListWidgetState();
+  _CountrySearchListWidgetState createState() => _CountrySearchListWidgetState();
 }
 
 class _CountrySearchListWidgetState extends State<CountrySearchListWidget> {
@@ -51,17 +58,22 @@ class _CountrySearchListWidgetState extends State<CountrySearchListWidget> {
 
   /// Returns [InputDecoration] of the search box
   InputDecoration getSearchBoxDecoration() {
-    return widget.searchBoxDecoration ??
-        InputDecoration(labelText: 'Search by country name or dial code');
+    return widget.searchBoxDecoration ?? InputDecoration(labelText: 'Search by country name or dial code');
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
+        widget.selectorTitleText != null
+            ? Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 26, bottom: 4),
+                child: Text(widget.selectorTitleText!, style: widget.selectorTitleTextStyle))
+            : SizedBox.shrink(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: TextFormField(
             key: Key(TestHelper.CountrySearchInputKeyValue),
             decoration: getSearchBoxDecoration(),
@@ -92,6 +104,8 @@ class _CountrySearchListWidgetState extends State<CountrySearchListWidget> {
                 locale: widget.locale,
                 showFlags: widget.showFlags!,
                 useEmoji: widget.useEmoji!,
+                emojiStyle: widget.emojiStyle,
+                countryTextStyle: widget.countryTextStyle,
               );
               // return ListTile(
               //   key: Key(TestHelper.countryItemKeyValue(country.alpha2Code)),
@@ -136,6 +150,8 @@ class DirectionalCountryListTile extends StatelessWidget {
   final String? locale;
   final bool showFlags;
   final bool useEmoji;
+  final TextStyle? emojiStyle;
+  final TextStyle? countryTextStyle;
 
   const DirectionalCountryListTile({
     Key? key,
@@ -143,27 +159,40 @@ class DirectionalCountryListTile extends StatelessWidget {
     required this.locale,
     required this.showFlags,
     required this.useEmoji,
+    required this.emojiStyle,
+    required this.countryTextStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      key: Key(TestHelper.countryItemKeyValue(country.alpha2Code)),
-      leading: (showFlags ? _Flag(country: country, useEmoji: useEmoji) : null),
-      title: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: Text(
-          '${Utils.getCountryName(country, locale)}',
-          textDirection: Directionality.of(context),
-          textAlign: TextAlign.start,
-        ),
-      ),
-      subtitle: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: Text(
-          '${country.dialCode ?? ''}',
-          textDirection: TextDirection.ltr,
-          textAlign: TextAlign.start,
+    return GestureDetector(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        child: Row(
+          key: Key(TestHelper.countryItemKeyValue(country.alpha2Code)),
+          children: [
+            showFlags
+                ? _Flag(
+                    country: country,
+                    useEmoji: useEmoji,
+                    emojiStyle: emojiStyle,
+                  )
+                : SizedBox.shrink(),
+            SizedBox(width: 12),
+            Expanded(
+                child: Text(
+              '${Utils.getCountryName(country, locale)}',
+              textDirection: Directionality.of(context),
+              textAlign: TextAlign.start,
+              style: countryTextStyle,
+            )),
+            Text(
+              '${country.dialCode ?? ''}',
+              textDirection: TextDirection.ltr,
+              textAlign: TextAlign.start,
+              style: countryTextStyle,
+            ),
+          ],
         ),
       ),
       onTap: () => Navigator.of(context).pop(country),
@@ -174,8 +203,9 @@ class DirectionalCountryListTile extends StatelessWidget {
 class _Flag extends StatelessWidget {
   final Country? country;
   final bool? useEmoji;
+  final TextStyle? emojiStyle;
 
-  const _Flag({Key? key, this.country, this.useEmoji}) : super(key: key);
+  const _Flag({Key? key, this.country, this.useEmoji, this.emojiStyle}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +214,7 @@ class _Flag extends StatelessWidget {
             child: useEmoji!
                 ? Text(
                     Utils.generateFlagEmojiUnicode(country?.alpha2Code ?? ''),
-                    style: Theme.of(context).textTheme.headline5,
+                    style: emojiStyle ?? Theme.of(context).textTheme.headline5,
                   )
                 : country?.flagUri != null
                     ? CircleAvatar(
