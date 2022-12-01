@@ -7,6 +7,7 @@ class Item extends StatelessWidget {
   final Country? country;
   final bool? showFlag;
   final bool? useEmoji;
+  final TextStyle? emojiStyle;
   final TextStyle? textStyle;
   final bool withCountryNames;
   final double? leadingPadding;
@@ -21,6 +22,7 @@ class Item extends StatelessWidget {
     this.withCountryNames = false,
     this.leadingPadding = 12,
     this.trailingSpace = true,
+    this.emojiStyle,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class Item extends StatelessWidget {
             country: country,
             showFlag: showFlag,
             useEmoji: useEmoji,
+            emojiStyle: emojiStyle,
           ),
           SizedBox(width: 12.0),
           Text(
@@ -56,9 +59,9 @@ class _Flag extends StatelessWidget {
   final Country? country;
   final bool? showFlag;
   final bool? useEmoji;
+  final TextStyle? emojiStyle;
 
-  const _Flag({Key? key, this.country, this.showFlag, this.useEmoji})
-      : super(key: key);
+  const _Flag({Key? key, this.country, this.showFlag, this.useEmoji, this.emojiStyle}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +70,7 @@ class _Flag extends StatelessWidget {
             child: useEmoji!
                 ? Text(
                     Utils.generateFlagEmojiUnicode(country?.alpha2Code ?? ''),
-                    style: Theme.of(context).textTheme.headline5,
+                    style: emojiStyle ?? Theme.of(context).textTheme.headline5,
                   )
                 : Image.asset(
                     country!.flagUri,
