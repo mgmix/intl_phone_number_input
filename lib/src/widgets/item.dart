@@ -6,6 +6,7 @@ import 'package:intl_phone_number_input/src/utils/util.dart';
 class Item extends StatelessWidget {
   final Country? country;
   final bool? showFlag;
+  final bool showOnlyFlag;
   final bool? useEmoji;
   final TextStyle? emojiStyle;
   final TextStyle? textStyle;
@@ -23,6 +24,7 @@ class Item extends StatelessWidget {
     this.leadingPadding = 12,
     this.trailingSpace = true,
     this.emojiStyle,
+    this.showOnlyFlag = false,
   }) : super(key: key);
 
   @override
@@ -43,7 +45,8 @@ class Item extends StatelessWidget {
             useEmoji: useEmoji,
             emojiStyle: emojiStyle,
           ),
-          SizedBox(width: 12.0),
+          showOnlyFlag ? SizedBox.shrink() :SizedBox(width: 12.0),
+          showOnlyFlag ? SizedBox.shrink() :
           Text(
             '$dialCode',
             textDirection: TextDirection.ltr,
