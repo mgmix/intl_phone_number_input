@@ -86,6 +86,7 @@ class InternationalPhoneNumberInput extends StatefulWidget {
   final Iterable<String>? autofillHints;
 
   final List<String>? countries;
+  final Function(Function()?)? selectorOnTap;
 
   InternationalPhoneNumberInput(
       {Key? key,
@@ -126,7 +127,8 @@ class InternationalPhoneNumberInput extends StatefulWidget {
       this.cursorColor,
       this.autofillHints,
       this.countries,
-      this.showOnlyFlag = false})
+      this.showOnlyFlag = false,
+      this.selectorOnTap})
       : super(key: key);
 
   @override
@@ -277,6 +279,7 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
         );
 
     if (widget.selectorConfig.setSelectorButtonAsPrefixIcon) {
+
       return value.copyWith(
           prefixIcon: SelectorButton(
         country: country,
@@ -290,7 +293,9 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
         autoFocusSearchField: widget.autoFocusSearch,
         isScrollControlled: widget.countrySelectorScrollControlled,
         showOnlyFlag: widget.showOnlyFlag,
+        selectorOnTap: widget.selectorOnTap,
       ));
+
     }
 
     return value;
@@ -388,6 +393,7 @@ class _InputWidgetView extends WidgetView<InternationalPhoneNumberInput, _InputW
                   autoFocusSearchField: widget.autoFocusSearch,
                   isScrollControlled: widget.countrySelectorScrollControlled,
                   showOnlyFlag: widget.showOnlyFlag,
+                  selectorOnTap: widget.selectorOnTap,
                 ),
                 SizedBox(
                   height: state.selectorButtonBottomPadding,

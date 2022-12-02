@@ -18,10 +18,10 @@ class SelectorButton extends StatelessWidget {
   final bool isEnabled;
   final bool isScrollControlled;
   final bool showOnlyFlag;
-
+  final void Function(Function()?)? selectorOnTap;
   final ValueChanged<Country?> onCountryChanged;
 
-  const SelectorButton({
+  SelectorButton({
     Key? key,
     required this.countries,
     required this.country,
@@ -34,12 +34,13 @@ class SelectorButton extends StatelessWidget {
     required this.isEnabled,
     required this.isScrollControlled,
     this.showOnlyFlag = false,
+    this.selectorOnTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return selectorConfig.selectorType == PhoneInputSelectorType.DROPDOWN
-        ? countries.isNotEmpty && countries.length > 1
+    if (selectorConfig.selectorType == PhoneInputSelectorType.DROPDOWN) {
+      return countries.isNotEmpty && countries.length > 1
             ? DropdownButtonHideUnderline(
                 child: DropdownButton<Country>(
                   key: Key(TestHelper.DropdownButtonKeyValue),
@@ -65,8 +66,9 @@ class SelectorButton extends StatelessWidget {
                 trailingSpace: selectorConfig.trailingSpace,
                 textStyle: selectorTextStyle,
                 emojiStyle: selectorConfig.emojiStyle,
-              )
-        : GestureDetector(
+              );
+    } else {
+      final gestureDetector =  GestureDetector(
             key: Key(TestHelper.DropdownButtonKeyValue),
             // padding: EdgeInsets.zero,
             // minWidth: 0,
@@ -98,6 +100,9 @@ class SelectorButton extends StatelessWidget {
               ),
             ),
           );
+      selectorOnTap?.call(gestureDetector.onTap);
+      return gestureDetector;
+    }
   }
 
   /// Converts the list [countries] to `DropdownMenuItem`
